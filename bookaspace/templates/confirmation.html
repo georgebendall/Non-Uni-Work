@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h2>Booking requested ✅</h2>
+  <p class="muted">Reference <span class="mono">{{ booking.ref }}</span></p>
+
+  <div class="divider"></div>
+
+  <div class="kv">
+    <div class="kv__row"><span class="muted">Venue</span><strong>{{ booking.venue_name }}</strong></div>
+    <div class="kv__row"><span class="muted">Date</span><strong>{{ booking.date }}</strong></div>
+    <div class="kv__row"><span class="muted">Start</span><strong>{{ booking.start }}</strong></div>
+    <div class="kv__row"><span class="muted">Hours</span><strong>{{ booking.hours }}</strong></div>
+    <div class="kv__row"><span class="muted">Attendees</span><strong>{{ booking.attendees }}</strong></div>
+    <div class="divider"></div>
+    <div class="kv__row"><span class="muted">Total</span><strong>{{ booking.pricing.total|gbp }}</strong></div>
+    <div class="kv__row"><span class="muted">Deposit</span><strong>{{ booking.pricing.deposit|gbp }}</strong></div>
+  </div>
+
+  <div class="note">
+    <strong>Prototype notice</strong>
+    <div class="muted small">
+      This demo doesn’t take payments or check real availabilities
+    </div>
+  </div>
+
+  <a class="btn btn--primary" href="{{ url_for('index') }}">Back to browse</a>
+</section>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a class="back" href="{{ url_for('venue_page', venue_id=venue.id) }}">← Back to venue</a>
+
+<section class="grid grid--checkout">
+  <article class="card">
+    <h2>Checkout</h2>
+    <p class="muted">{{ venue.name }} • {{ venue.area }}, {{ venue.city }}</p>
+
+    {% if errors %}
+      <div class="alert">
+        <strong>Fix these issues:</strong>
+        <ul>
+          {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <form class="form" method="post" action="{{ url_for('submit_booking', venue_id=venue.id) }}" data-quote-form>
+      <div class="row">
+        <label>
+          Date
+          <input type="date" name="date" value="{{ (form.get('date') if form else default_date) }}" required />
+        </label>
+        <label>
+          Start time
+          <input type="time" name="start" value="{{ (form.get('start') if form else '18:00') }}" required />
+        </label>
+      </div>
+
+      <div class="row">
+        <label>
+          Hours (min {{ venue.min_hours }})
+          <input type="number" name="hours" min="{{ venue.min_hours }}" max="24"
+                 value="{{ (form.get('hours') if form else venue.min_hours) }}" required data-hours />
+        </label>
+        <label>
+          Attendees (max {{ venue.capacity }})
+          <input type="number" name="attendees" min="1" max="{{ venue.capacity }}"
+                 value="{{ (form.get('attendees') if form else 50) }}" required />
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <label>
+          Organiser name
+          <input type="text" name="organiser_name" value="{{ (form.get('organiser_name') if form else '') }}" required />
+        </label>
+        <label>
+          Email
+          <input type="email" name="organiser_email" value="{{ (form.get('organiser_email') if form else '') }}" required />
+        </label>
+      </div>
+
+      <div class="row">
+        <label>
+          Phone
+          <input type="text" name="phone" value="{{ (form.get('phone') if form else '') }}" required />
+        </label>
+        <label>
+          Extra requests
+          <input type="text" name="notes" value="{{ (form.get('notes') if form else '') }}" placeholder="Access needs, setup, catering…" />
+        </label>
+      </div>
+
+      <label class="check policy">
+        <input type="checkbox" name="agree" {% if form and form.get('agree') %}checked{% endif %} required />
+        <span>
+          <strong>Agree to policies</strong>
+          <span class="muted small">I agree to house rules, cancellation policy and BookASpace terms.</span>
+        </span>
+      </label>
+
+      <button class="btn btn--primary" type="submit">Confirm booking (demo)</button>
+
+      <!-- quote config for JS -->
+      <script type="application/json" data-quote-config>
+        {{ {
+          "price_per_hour": venue.price_per_hour,
+          "min_hours": venue.min_hours,
+          "deposit_pct": venue.deposit_pct,
+          "service_fee_rate": 0.06
+        } | tojson }}
+      </script>
+    </form>
+  </article>
+
+  <aside class="card">
+    <h3 class="card__title">Quote</h3>
+    <p class="muted small">Estimated cost for this booking</p>
+
+    <div class="kv" data-quote-box>
+      <div class="kv__row"><span class="muted">Base</span><strong data-quote-base>—</strong></div>
+      <div class="kv__row"><span class="muted">Service fee</span><strong data-quote-fee>—</strong></div>
+      <div class="divider"></div>
+      <div class="kv__row"><span class="muted">Total</span><strong data-quote-total>—</strong></div>
+
+      <div class="note">
+        <strong>Deposit due now</strong>
+        <div class="muted small" data-quote-deposit>—</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Payment</strong>
+      <div class="muted small">Placeholder only</div>
+    </div>
+  </aside>
+</section>
+
+{% endblock %}

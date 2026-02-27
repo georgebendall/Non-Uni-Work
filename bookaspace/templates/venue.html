@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a class="back" href="{{ url_for('index') }}">← Back to search</a>
+
+<section class="grid grid--2 grid--venue">
+  <article class="card">
+    <div class="gallery" data-gallery>
+      <img class="gallery__img" src="{{ venue.images[0] }}" alt="{{ venue.name }}" data-gallery-img />
+      <div class="gallery__controls">
+        <button class="btn btn--soft" type="button" data-gallery-prev>Prev</button>
+        <button class="btn btn--soft" type="button" data-gallery-next>Next</button>
+      </div>
+
+      <script type="application/json" data-gallery-images>
+        {{ venue.images|tojson }}
+      </script>
+    </div>
+
+    <div class="card__body">
+      <div class="card__top">
+        <div>
+          <h2 class="card__name">{{ venue.name }}</h2>
+          <div class="muted">{{ venue.area }}, {{ venue.city }}</div>
+        </div>
+        <span class="badge">{{ venue.type }}</span>
+      </div>
+
+      <div class="chips">
+        <span class="chip">Up to {{ venue.capacity }} guests</span>
+        <span class="chip">{{ venue.price_per_hour|gbp }}/hour</span>
+        <span class="chip">Min {{ venue.min_hours }} hours</span>
+      </div>
+
+      <p class="muted">{{ venue.description }}</p>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="label">Amenities</div>
+        <div class="badges">
+          {% for f in venue.features %}
+            <span class="badge badge--soft">{{ f }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="label">Availability (next 7 days)</div>
+        <div class="availability" data-availability>
+          <!-- JS fills chips -->
+        </div>
+
+        <script type="application/json" data-availability-json>
+          {{ venue.availability|tojson }}
+        </script>
+
+        <div class="muted small">Prototype only </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div>
+        <div class="label">Notes</div>
+        <div class="muted">{{ venue.notes }}</div>
+      </div>
+    </div>
+  </article>
+
+  <aside class="card">
+    <h3 class="card__title">Book this space</h3>
+
+    <div class="kv">
+      <div class="kv__row"><span class="muted">Price per hour</span><strong>{{ venue.price_per_hour|gbp }}</strong></div>
+      <div class="kv__row"><span class="muted">Minimum booking</span><strong>{{ venue.min_hours }} hours</strong></div>
+      <div class="kv__row"><span class="muted">Deposit</span><strong>{{ venue.deposit_pct }}%</strong></div>
+    </div>
+
+    <a class="btn btn--primary btn--full" href="{{ url_for('booking_page', venue_id=venue.id) }}">Start booking</a>
+
+    <div class="note">
+      <strong>Security note</strong>
+      <div class="muted small">
+        Real security / legal issues here
+      </div>
+    </div>
+  </aside>
+</section>
+
+{% endblock %}
